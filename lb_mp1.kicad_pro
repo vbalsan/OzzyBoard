@@ -34,8 +34,8 @@
         "other_text_upright": false,
         "pads": {
           "drill": 0.0,
-          "height": 0.23,
-          "width": 0.23
+          "height": 0.13,
+          "width": 0.35
         },
         "silk_line_width": 0.15,
         "silk_text_italic": false,
@@ -337,14 +337,14 @@
       "global_label_dangling": "warning",
       "hier_label_mismatch": "error",
       "label_dangling": "error",
-      "lib_symbol_issues": "warning",
+      "lib_symbol_issues": "ignore",
       "multiple_net_names": "warning",
       "net_not_bus_member": "warning",
       "no_connect_connected": "warning",
       "no_connect_dangling": "warning",
       "pin_not_connected": "error",
       "pin_not_driven": "error",
-      "pin_to_pin": "warning",
+      "pin_to_pin": "error",
       "power_pin_not_driven": "error",
       "similar_labels": "warning",
       "unannotated": "error",
@@ -442,23 +442,27 @@
     ],
     [
       "b8067218-dbac-41f1-843a-54c29ef5e090",
-      "Untitled Sheet"
+      "Clocks Buttons"
     ],
     [
       "71da5b64-f121-48ae-a4be-725835e49cb4",
-      "Untitled Sheet2"
+      "Connections"
     ],
     [
       "2cfd9000-0998-45b7-91bb-cb8493ed1373",
-      "Untitled Sheet3"
+      "Memory"
     ],
     [
       "58a57fe5-910c-41cb-bb8b-170ce3e0878b",
-      "Untitled Sheet4"
+      "Audio Video"
     ],
     [
       "7fe8d588-9805-4bd8-9058-2c232fa95ce2",
-      "Untitled Sheet5"
+      "STM32"
+    ],
+    [
+      "1c0629f8-c5cc-472c-a83e-6ea7f5fddac4",
+      "Power"
     ]
   ],
   "text_variables": {}
