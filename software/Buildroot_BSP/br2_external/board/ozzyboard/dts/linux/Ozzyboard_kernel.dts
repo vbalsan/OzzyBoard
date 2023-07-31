@@ -1,0 +1,273 @@
+
+
+
+/dts-v1/;
+
+#include "sunxi-common-regulators.dtsi"
+
+#include "sun8i-V3s-Ozzyboard_kernel.dtsi"
+
+#include <dt-bindings/input/input.h>
+
+
+/ {
+	model = "Ozzyboard";
+	compatible = "ozzyboard", "allwinner,sun8i-v3s";
+
+	aliases {
+		serial0 = &uart0;
+		ethernet0 = &emac;		
+	};
+
+	chosen {
+		stdout-path = "serial0:115200n8";
+		
+		fb0: framebuffer@0 {
+			compatible = "allwinner,simple-framebuffer", "simple-framebuffer";
+			allwinner,pipeline = "de0-lcd0";
+			clocks = <0x2 0x21 0x2 0x23 0x2 0x3f 0x2 0x40>;
+			status = "okay";
+		};
+	};
+	
+	backlight: backlight {
+		compatible = "pwm-backlight";
+		pwms = <&pwm 0 40000 1>;
+		brightness-levels = <0 1 2 3 8 14 21 32 46 60 80 100>; //2.2 div factor
+		default-brightness-level = <11>;
+		power-supply = <&reg_vcc5v0>;			
+	};
+	
+	bat: battery {
+		compatible = "simple-battery";
+		constant_charge_current_max_microamp = <400000>;
+	};
+};
+
+&de {
+	status = "okay";
+};
+&display_clocks {
+	status = "okay";
+};
+&mixer0 {
+	status = "okay";
+};
+&tcon0 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&lcd_rgb666_pins_a>;
+	status = "okay";
+};
+
+&pwm {
+        pinctrl-names = "default";
+        pinctrl-0 = <&pwm0_pins>, <&pwm1_pins>;       
+        status = "okay";
+};
+
+			
+&mmc0 {
+	pinctrl-0 = <&mmc0_pins>;
+	pinctrl-names = "default"; 
+	broken-cd;
+	bus-width = <4>;
+	vmmc-supply = <&reg_vcc3v3>;
+	status = "okay";
+};
+
+&mmc1 {
+	pinctrl-0 = <&mmc1_pins>;
+	pinctrl-names = "default";
+	broken-cd;
+	bus-width = <4>;
+	vmmc-supply = <&reg_vcc3v3>;
+	status = "okay";
+};
+
+
+&uart0 {
+	pinctrl-0 = <&uart0_pb_pins>;
+	pinctrl-names = "default";
+	status = "okay";
+};
+
+
+
+&usb_otg {
+	dr_mode = "peripheral";
+	status = "okay";
+};
+
+&usbphy {
+	usb0_vbus-supply = <&reg_vcc5v0>;
+	phy-supply = <&reg_vcc5v0>;
+	vcc = <&reg_vcc5v0>;
+	status = "okay";
+};
+
+/*
+ehci0: usb@01c1a000 {
+	compatible = "allwinner,sun8i-v3s-ehci", "generic-ehci";
+	reg = <0x01c1a000 0x100>;
+	interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
+	clocks = <&ccu CLK_BUS_EHCI0>, <&ccu CLK_BUS_OHCI0>;
+	resets = <&ccu RST_BUS_EHCI0>, <&ccu RST_BUS_OHCI0>;
+	status = "okay";
+};
+
+ohci0: usb@01c1a400 {
+	compatible = "allwinner,sun8i-v3s-ohci", "generic-ohci";
+	reg = <0x01c1a400 0x100>;
+	interrupts = <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;
+	clocks = <&ccu CLK_BUS_EHCI0>, <&ccu CLK_BUS_OHCI0>,
+		 <&ccu CLK_USB_OHCI0>;
+	resets = <&ccu RST_BUS_EHCI0>, <&ccu RST_BUS_OHCI0>;
+	status = "okay";
+};
+*/
+           
+&emac {
+	allwinner,leds-active-high;
+	status = "okay";
+};
+
+&i2c0 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&i2c0_pins>;	
+	status = "okay";
+	
+	axp209: pmic@34 {
+		compatible = "x-powers,axp209";
+		reg = <0x34>;
+		
+		interrupt-parent = <&pio>;
+		interrupts = <1 0 IRQ_TYPE_EDGE_FALLING>;
+		interrupt-controller;
+		#interrupt-cells = <1>;
+	};
+};
+
+#include "axp209.dtsi"
+
+&ac_power_supply {
+	status = "okay";
+};
+
+&axp_gpio {
+	status = "okay";
+};
+
+&battery_power_supply {
+	status = "okay";
+	monitored-battery = <&bat>;
+};
+
+&usb_power_supply {
+	status = "okay";
+};
+
+&reg_dcdc2 {
+	regulator-always-on;
+	regulator-min-microvolt = <1000000>;
+	regulator-max-microvolt = <1400000>;
+	regulator-name = "vdd-cpu-sys-ephy";
+};
+
+&reg_dcdc3 {
+	regulator-always-on;
+	regulator-min-microvolt = <3000000>;
+	regulator-max-microvolt = <3450000>;
+	regulator-name = "vcc-io-ephy-mcsi-usb";
+};
+
+&reg_ldo1 {
+	regulator-min-microvolt = <3000000>;
+	regulator-max-microvolt = <3600000>;
+	regulator-name = "vcc-rtc";
+};
+
+&reg_ldo2 {
+	regulator-always-on;
+	regulator-min-microvolt = <2800000>;
+	regulator-max-microvolt = <3300000>;
+	regulator-name = "avcc-pll";
+};
+
+&reg_vcc3v0 {
+	regulator-always-on;
+	status = "okay";
+};
+
+&reg_vcc3v3 {
+	regulator-always-on;
+	status = "okay";
+};
+
+&reg_vcc5v0 {
+	regulator-always-on;
+	status = "okay";
+};
+
+/*
+&i2c1 {
+	pinctrl-0 = <&i2c1_pins>;
+	pinctrl-names = "default";
+	status = "disabled";
+};
+*/
+
+
+&spi0 {
+	pinctrl-0 = <&spi0_pins>;
+	pinctrl-names = "default";
+	status = "okay";
+	
+};
+
+&codec {
+	allwinner,audio-routing =
+		"Headphone", "HP",
+		"Headphone", "HPCOM",
+		"MIC1", "Mic",
+		"Mic",  "HBIAS";
+	status = "okay";
+};
+
+&codec_analog {
+	status = "okay";
+};
+
+&lradc {
+	vref-supply = <&reg_vcc3v0>;
+	status = "okay";
+
+	button@200 {
+		label = "Volume Up";
+		linux,code = <KEY_VOLUMEUP>;
+		channel = <0>;
+		voltage = <200000>;
+	};
+
+	button@400 {
+		label = "Volume Down";
+		linux,code = <KEY_VOLUMEDOWN>;
+		channel = <0>;
+		voltage = <400000>;
+	};
+
+	button@600 {
+		label = "Select";
+		linux,code = <KEY_SELECT>;
+		channel = <0>;
+		voltage = <600000>;
+	};
+
+	button@800 {
+		label = "Start";
+		linux,code = <KEY_OK>;
+		channel = <0>;
+		voltage = <800000>;
+	};
+};
+
+
