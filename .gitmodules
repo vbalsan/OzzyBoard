@@ -1,0 +1,3 @@
+[submodule "software/Buildroot_BSP/buildroot"]
+	path = software/Buildroot_BSP/buildroot
+	url = https://github.com/buildroot/buildroot
