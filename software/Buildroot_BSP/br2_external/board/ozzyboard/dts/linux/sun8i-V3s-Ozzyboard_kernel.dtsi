@@ -1,48 +1,5 @@
-/*
- * Copyright (C) 2016 Icenowy Zheng <icenowy@aosc.xyz>
- * Copyright (C) 2021 Tobias Schramm <t.schramm@manjaro.org>
- *
- * This file is dual-licensed: you can use it either under the terms
- * of the GPL or the X11 license, at your option. Note that this dual
- * licensing only applies to this file, and not this project as a
- * whole.
- *
- *  a) This file is free software; you can redistribute it and/or
- *     modify it under the terms of the GNU General Public License as
- *     published by the Free Software Foundation; either version 2 of the
- *     License, or (at your option) any later version.
- *
- *     This file is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
- *
- * Or, alternatively,
- *
- *  b) Permission is hereby granted, free of charge, to any person
- *     obtaining a copy of this software and associated documentation
- *     files (the "Software"), to deal in the Software without
- *     restriction, including without limitation the rights to use,
- *     copy, modify, merge, publish, distribute, sublicense, and/or
- *     sell copies of the Software, and to permit persons to whom the
- *     Software is furnished to do so, subject to the following
- *     conditions:
- *
- *     The above copyright notice and this permission notice shall be
- *     included in all copies or substantial portions of the Software.
- *
- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- *     OTHER DEALINGS IN THE SOFTWARE.
- */
-
 #include <dt-bindings/interrupt-controller/arm-gic.h>
-#include <dt-bindings/clock/sun6i-rtc.h>
+//#include <dt-bindings/clock/sun6i-rtc.h>
 #include <dt-bindings/clock/sun8i-v3s-ccu.h>
 #include <dt-bindings/reset/sun8i-v3s-ccu.h>
 #include <dt-bindings/clock/sun8i-de2.h>
@@ -57,12 +14,12 @@
 		#size-cells = <1>;
 		ranges;
 
-		framebuffer-lcd {
+		simplefb_lcd: framebuffer@0 {
 			compatible = "allwinner,simple-framebuffer",
 				     "simple-framebuffer";
-			allwinner,pipeline = "mixer0-lcd0";
-			clocks = <&display_clocks CLK_MIXER0>,
-				 <&ccu CLK_TCON0>;
+			allwinner,pipeline = "de0-lcd0";
+			clocks = <&ccu CLK_BUS_TCON0>, <&ccu CLK_BUS_DE>,
+				 <&ccu CLK_DE>, <&ccu CLK_TCON0>;
 			status = "disabled";
 		};
 	};
@@ -78,12 +35,7 @@
 			clocks = <&ccu CLK_CPU>;
 		};
 	};
-
-	de: display-engine {
-		compatible = "allwinner,sun8i-v3s-display-engine";
-		allwinner,pipelines = <&mixer0>;
-		status = "disabled";
-	};
+	
 
 	timer {
 		compatible = "arm,armv7-timer";
@@ -119,43 +71,8 @@
 		compatible = "simple-bus";
 		#address-cells = <1>;
 		#size-cells = <1>;
-		ranges;
-
-		display_clocks: clock@1000000 {
-			compatible = "allwinner,sun8i-v3s-de2-clk";
-			reg = <0x01000000 0x10000>;
-			clocks = <&ccu CLK_BUS_DE>,
-				 <&ccu CLK_DE>;
-			clock-names = "bus",
-				      "mod";
-			resets = <&ccu RST_BUS_DE>;
-			#clock-cells = <1>;
-			#reset-cells = <1>;
-		};
-
-		mixer0: mixer@1100000 {
-			compatible = "allwinner,sun8i-v3s-de2-mixer";
-			reg = <0x01100000 0x100000>;
-			clocks = <&display_clocks 0>,
-				 <&display_clocks 6>;
-			clock-names = "bus",
-				      "mod";
-			resets = <&display_clocks 0>;
-
-			ports {
-				#address-cells = <1>;
-				#size-cells = <0>;
-
-				mixer0_out: port@1 {
-					reg = <1>;
-
-					mixer0_out_tcon0: endpoint {
-						remote-endpoint = <&tcon0_in_mixer0>;
-					};
-				};
-			};
-		};
-
+		ranges;		
+		
 		syscon: system-control@1c00000 {
 			compatible = "allwinner,sun8i-v3s-system-control",
 				     "allwinner,sun8i-h3-system-control";
@@ -164,7 +81,7 @@
 			#size-cells = <1>;
 			ranges;
 		};
-
+		
 		nmi_intc: interrupt-controller@1c000d0 {
 			compatible = "allwinner,sun8i-v3s-nmi",
 				     "allwinner,sun9i-a80-nmi";
@@ -183,39 +100,7 @@
 			#dma-cells = <1>;
 		};
 
-		tcon0: lcd-controller@1c0c000 {
-			compatible = "allwinner,sun8i-v3s-tcon";
-			reg = <0x01c0c000 0x1000>;
-			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
-			clocks = <&ccu CLK_BUS_TCON0>,
-				 <&ccu CLK_TCON0>;
-			clock-names = "ahb",
-				      "tcon-ch0";
-			clock-output-names = "tcon-data-clock";
-			#clock-cells = <0>;
-			resets = <&ccu RST_BUS_TCON0>;
-			reset-names = "lcd";
-			status = "disabled";
-
-			ports {
-				#address-cells = <1>;
-				#size-cells = <0>;
-
-				tcon0_in: port@0 {
-					reg = <0>;
-
-					tcon0_in_mixer0: endpoint {
-						remote-endpoint = <&mixer0_out_tcon0>;
-					};
-				};
-
-				tcon0_out: port@1 {
-					#address-cells = <1>;
-					#size-cells = <0>;
-					reg = <1>;
-				};
-			};
-		};
+		
 
 
 		mmc0: mmc@1c0f000 {
@@ -322,7 +207,8 @@
 		ccu: clock@1c20000 {
 			compatible = "allwinner,sun8i-v3s-ccu";
 			reg = <0x01c20000 0x400>;
-			clocks = <&osc24M>, <&rtc CLK_OSC32K>;
+			//clocks = <&osc24M>, <&rtc CLK_OSC32K>;
+			clocks = <&osc24M>, <&rtc 0>;
 			clock-names = "hosc", "losc";
 			#clock-cells = <1>;
 			#reset-cells = <1>;
@@ -344,7 +230,7 @@
 			interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
 				     <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
 			clocks = <&ccu CLK_BUS_PIO>, <&osc24M>,
-				 <&rtc CLK_OSC32K>;
+				 <&rtc 0>;
 			clock-names = "apb", "hosc", "losc";
 			gpio-controller;
 			#gpio-cells = <3>;
@@ -372,7 +258,7 @@
 				function = "csi";
 			};
 			*/
-			lcd_rgb666_pins_a: lcd-rgb666-pe {
+			rgb_pins: rgb_pins {
 				pins = "PE0", "PE1", "PE2", "PE3", "PE4", "PE5",
 				       "PE6", "PE7", "PE8", "PE9", "PE10", "PE11",
 				       "PE12", "PE13", "PE14", "PE15", "PE16", "PE17",
