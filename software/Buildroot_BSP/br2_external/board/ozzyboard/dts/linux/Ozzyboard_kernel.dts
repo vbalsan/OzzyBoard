@@ -11,7 +11,8 @@
 
 	aliases {
 		serial0 = &uart0;
-		ethernet0 = &emac;		
+		ethernet0 = &emac;
+		spi0 = &spi0;	
 	};
 
 	chosen {
@@ -183,6 +184,12 @@ ohci0: usb@01c1a400 {
 	pinctrl-0 = <&spi0_pins>;
 	pinctrl-names = "default";
 	status = "okay";
+	
+	spidev@0 {
+        	  compatible = "spidev";
+                  spi-max-frequency = <62500000>;
+                  reg = <0>;
+       };
 	
 };
 

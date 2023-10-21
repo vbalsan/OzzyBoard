@@ -1,6 +1,6 @@
-diff -ur u-boot-2022.01/arch/arm/dts/Makefile u-boot-2022.01_mod/arch/arm/dts/Makefile
+diff -ur u-boot-2022.01/arch/arm/dts/Makefile u-boot-2022.01/arch/arm/dts/Makefile
 --- u-boot-2022.01/arch/arm/dts/Makefile	2022-01-10 13:46:34.000000000 -0500
-+++ u-boot-2022.01_mod/arch/arm/dts/Makefile	2023-04-30 03:56:52.413449533 -0400
++++ u-boot-2022.01/arch/arm/dts/Makefile	2023-04-30 03:56:52.413449533 -0400
 @@ -639,7 +639,8 @@
  	sun8i-v40-bananapi-m2-berry.dtb
  dtb-$(CONFIG_MACH_SUN8I_V3S) += \
