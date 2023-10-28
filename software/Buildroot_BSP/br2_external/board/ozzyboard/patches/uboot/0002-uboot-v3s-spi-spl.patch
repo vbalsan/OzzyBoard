@@ -1,5 +1,16 @@
 --- u-boot-2022.01/arch/arm/mach-sunxi/Kconfig	2022-01-10 13:46:34.000000000 -0500
 +++ u-boot-2022.01/arch/arm/mach-sunxi/Kconfig	2023-10-20 23:26:49.341505569 -0400
+
+@@ -790,7 +790,6 @@
+ 	depends on !MACH_SUN8I_A83T
+ 	depends on !MACH_SUNXI_H3_H5
+ 	depends on !MACH_SUN8I_R40
+-	depends on !MACH_SUN8I_V3S
+ 	depends on !MACH_SUN9I
+ 	depends on !MACH_SUN50I
+ 	depends on !SUN50I_GEN_H6
+ 	
+
 @@ -1016,7 +1016,7 @@
  
  config SPL_SPI_SUNXI
