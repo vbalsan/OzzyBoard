@@ -8,6 +8,9 @@
 *.kicad_pcb-bak
 *.sch-bak
 *~
+/hardware/RevA/lb_mp1-backups
+/hardware/RevB/lb_mp1-backups
+
 _autosave-*
 *.tmp
 *-save.pro
