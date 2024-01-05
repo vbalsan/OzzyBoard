@@ -1,13 +1,8 @@
-
-
-
 /dts-v1/;
-
+#include "sun8i-V3s-Ozzyboard_kernel.dtsi"
 #include "sunxi-common-regulators.dtsi"
 
-#include "sun8i-V3s-Ozzyboard_kernel.dtsi"
-
-#include <dt-bindings/input/input.h>
+//#include <dt-bindings/input/input.h>
 
 
 / {
@@ -16,26 +11,12 @@
 
 	aliases {
 		serial0 = &uart0;
-		ethernet0 = &emac;		
+		ethernet0 = &emac;
+		spi0 = &spi0;	
 	};
 
 	chosen {
-		stdout-path = "serial0:115200n8";
-		
-		fb0: framebuffer@0 {
-			compatible = "allwinner,simple-framebuffer", "simple-framebuffer";
-			allwinner,pipeline = "de0-lcd0";
-			clocks = <0x2 0x21 0x2 0x23 0x2 0x3f 0x2 0x40>;
-			status = "okay";
-		};
-	};
-	
-	backlight: backlight {
-		compatible = "pwm-backlight";
-		pwms = <&pwm 0 40000 1>;
-		brightness-levels = <0 1 2 3 8 14 21 32 46 60 80 100>; //2.2 div factor
-		default-brightness-level = <11>;
-		power-supply = <&reg_vcc5v0>;			
+		stdout-path = "serial0:115200n8";			
 	};
 	
 	bat: battery {
@@ -44,31 +25,13 @@
 	};
 };
 
-&de {
-	status = "okay";
-};
-&display_clocks {
-	status = "okay";
-};
-&mixer0 {
-	status = "okay";
-};
-&tcon0 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&lcd_rgb666_pins_a>;
-	status = "okay";
-};
-
 &pwm {
         pinctrl-names = "default";
         pinctrl-0 = <&pwm0_pins>, <&pwm1_pins>;       
         status = "okay";
 };
-
 			
 &mmc0 {
-	pinctrl-0 = <&mmc0_pins>;
-	pinctrl-names = "default"; 
 	broken-cd;
 	bus-width = <4>;
 	vmmc-supply = <&reg_vcc3v3>;
@@ -222,6 +185,12 @@ ohci0: usb@01c1a400 {
 	pinctrl-names = "default";
 	status = "okay";
 	
+	spidev@0 {
+        	  compatible = "spidev";
+                  spi-max-frequency = <62500000>;
+                  reg = <0>;
+       };
+	
 };
 
 &codec {
@@ -237,6 +206,7 @@ ohci0: usb@01c1a400 {
 	status = "okay";
 };
 
+/*
 &lradc {
 	vref-supply = <&reg_vcc3v0>;
 	status = "okay";
@@ -269,5 +239,5 @@ ohci0: usb@01c1a400 {
 		voltage = <800000>;
 	};
 };
-
+*/
 
