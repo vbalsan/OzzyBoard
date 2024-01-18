@@ -5,9 +5,9 @@
   (paper "A4")
 
   (title_block
-    (title "OzzyBoard")
-    (date "2023-03-10")
-    (rev "0.91")
+    (title "OzzyBoard Rev B")
+    (date "2024-01-15")
+    (rev "0.92")
   )
 
   (lib_symbols

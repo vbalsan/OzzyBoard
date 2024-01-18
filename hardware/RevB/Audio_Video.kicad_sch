@@ -5,9 +5,9 @@
   (paper "A4")
 
   (title_block
-    (title "OzzyBoard")
-    (date "2023-03-10")
-    (rev "0.91")
+    (title "OzzyBoard Rev B")
+    (date "2024-01-15")
+    (rev "0.92")
   )
 
   (lib_symbols
@@ -1635,7 +1635,6 @@
       )
     )
   )
-
 
   (junction (at 113.03 163.83) (diameter 0) (color 0 0 0 0)
     (uuid 00e8a871-5ea5-457d-b6d4-e8b0e47eaf98)
